@@ -109,18 +109,23 @@ if __name__ == '__main__':
     )
 
     print(model)
-
     criterion = torch.nn.MSELoss()
-
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
     if opt.test:
-        
-        metrics = [PSNRMeter(), SSIMMeter(), LPIPSMeter(device=device), BitAccMeter(net = opt.extractor, device=device)]
+        metrics = [
+            PSNRMeter(), SSIMMeter(), LPIPSMeter(device=device),
+            BitAccMeter(net = opt.extractor, device=device)
+        ]
+        trainer = Trainer(
+            'ngp', opt, model, device=device,
+            workspace=opt.workspace, criterion=criterion,
+            fp16=opt.fp16, metrics=metrics, use_checkpoint=opt.ckpt
+        )
 
-        trainer = Trainer('ngp', opt, model, device=device, workspace=opt.workspace, criterion=criterion, fp16=opt.fp16, metrics=metrics, use_checkpoint=opt.ckpt)
-
-        test_loader = NeRFDataset(opt, device=device, type='test',downscale=2).dataloader()
+        test_loader = NeRFDataset(
+            opt, device=device, type='test',downscale=2
+        ).dataloader()
         
         if test_loader.has_gt:
             trainer.evaluate(test_loader) # blender has gt, so evaluate it.
@@ -130,7 +135,6 @@ if __name__ == '__main__':
         trainer.save_mesh(resolution=256, threshold=10)
     
     else:
-
         train_loader = NeRFDataset(opt, device=device, type='train', downscale=2).dataloader()
 
         optimizer = lambda model: torch.optim.Adam(model.get_params(opt.lr), betas=(0.9, 0.99), eps=1e-15)
