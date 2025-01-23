@@ -3,8 +3,8 @@
 
 # Install
 ```bash
-git clone --recursive https://github.com/qsong2001/NeRFProtector-code.git
-cd NeRFProtector-code
+git clone --recursive https://github.com/2InfinityN6eyond/NeRFProtector-code-2-3DGS.git
+cd NeRFProtector-code-2-3DGS
 ```
 
 ### Install with conda and pip

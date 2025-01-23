@@ -33,6 +33,7 @@ if __name__ == '__main__':
     parser.add_argument('--patch_size', type=int, default=1, help="[experimental] render patches in training, so as to apply LPIPS loss. 1 means disabled, use [64, 32, 16] to enable")
 
     ### network backbone options
+
     parser.add_argument('--fp16', action='store_true', help="use amp mixed precision training")
     parser.add_argument('--ff', action='store_true', help="use fully-fused MLP")
     parser.add_argument('--tcnn', action='store_true', help="use TCNN backend")
@@ -68,7 +69,7 @@ if __name__ == '__main__':
     parser.add_argument('--init_ckpt', default=None, type=str, help="Path to ckpt of NeRF")
     opt = parser.parse_args()
 
-
+    
     if opt.O:
         opt.fp16 = True
         opt.cuda_ray = True
@@ -94,10 +95,14 @@ if __name__ == '__main__':
     else:
         from nerf.network import NeRFNetwork
 
-    print(opt)
+    from pprint import pprint
+    pprint(opt)
     
     seed_everything(opt.seed)
 
+
+    import ipdb; ipdb.set_trace()
+    
     model = NeRFNetwork(
         encoding="hashgrid",
         bound=opt.bound,
